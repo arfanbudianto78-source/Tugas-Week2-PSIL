@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sistem LAA — Telkom University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --brand:#C8102E; --brand-dark:#8E0B20; --paper:#FFFFFF; --panel:#FAFAFA; --ink:#1A1A1A; --muted:#6B6B6B;
+  --line:#E2E2E2; --gold:#B8862E; --gold-soft:#FBF1E0; --red:#C8102E; --red-soft:#FBE7EA;
+  --green:#2E7D46; --green-soft:#E7F3EA;
+  --serif:"Source Serif 4", Georgia, serif; --sans:"IBM Plex Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --paper:#171414; --panel:#1F1A1A; --ink:#F2EDED; --muted:#B0A5A5; --line:#3A2E2E; --brand:#E4425A; --gold-soft:#332616; --red-soft:#3A1E22; --green-soft:#1B2B20; }
+}
+:root[data-theme="dark"]{ --paper:#171414; --panel:#1F1A1A; --ink:#F2EDED; --muted:#B0A5A5; --line:#3A2E2E; --brand:#E4425A; --gold-soft:#332616; --red-soft:#3A1E22; --green-soft:#1B2B20; }
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;}
+a{color:inherit;}
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh;}
+aside{border-right:1px solid var(--line);padding:20px 18px;position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;}
+.mark{display:flex;gap:10px;align-items:center;margin-bottom:22px;}
+.mark .seal{width:34px;height:34px;border:1.5px solid var(--brand);border-radius:50%;display:grid;place-items:center;color:var(--brand);font-family:var(--serif);font-weight:700;font-size:15px;flex:none;}
+.mark div b{display:block;font-family:var(--serif);font-size:15px;line-height:1.2;}
+.mark div span{font-size:11px;color:var(--muted);}
+.rolebox{border:1px solid var(--line);border-radius:3px;margin-bottom:18px;}
+.rolebox .h{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 10px 6px;}
+.rolebox button{display:block;width:100%;text-align:left;padding:8px 10px;font-size:13px;border-top:1px solid var(--line);}
+.rolebox button:first-of-type{border-top:1px solid var(--line);}
+.rolebox button[aria-pressed="true"]{background:var(--brand);color:#fff;font-weight:600;}
+.rolebox button span{display:block;font-size:10.5px;color:var(--muted);}
+.rolebox button[aria-pressed="true"] span{color:var(--paper);opacity:.7;}
+.signout{font-size:12px;color:var(--muted);text-decoration:underline;}
+.navbox{margin-top:4px;}
+.navbox .h{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:4px 2px 6px;}
+.navbox button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:8px 8px;font-size:13px;border-radius:3px;color:var(--ink);margin-bottom:2px;}
+.navbox button[aria-current="true"]{background:var(--brand);color:#fff;font-weight:600;}
+.navbox button .ic{width:15px;text-align:center;flex:none;opacity:.75;}
+.appbar{margin-bottom:6px;}
+.appbar .crumbtxt{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.appbar-row{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+.appbar-row h1{font-family:var(--serif);font-size:21px;margin:0;font-weight:600;}
+.appbar-right{display:flex;align-items:center;gap:12px;}
+.searchbox{border:1px solid var(--line);border-radius:3px;padding:6px 10px;font-size:12.5px;color:var(--muted);background:var(--panel);min-width:200px;}
+.bell{border:1px solid var(--line);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-size:14px;}
+.profilechip{display:flex;align-items:center;gap:8px;}
+.profilechip .av{width:30px;height:30px;border-radius:50%;background:var(--red-soft);color:var(--brand);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;}
+.profilechip .nm{font-size:12.5px;line-height:1.3;}
+.profilechip .nm b{display:block;font-weight:600;}
+.profilechip .nm span{color:var(--muted);font-size:11px;}
+.banner{background:var(--brand-dark);color:#fff;border-radius:3px;padding:20px 24px;margin:16px 0 20px;position:relative;overflow:hidden;}
+.banner .badge{display:inline-block;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:2px 10px;margin-bottom:10px;}
+.banner h2{font-family:var(--serif);font-size:19px;margin:0 0 6px;font-weight:600;}
+.banner p{font-size:12.5px;color:rgba(255,255,255,.8);margin:0;max-width:640px;}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.statcard{border:1px solid var(--line);border-radius:3px;padding:14px;display:flex;justify-content:space-between;align-items:flex-start;background:var(--panel);}
+.statcard .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+.statcard b{display:block;font-family:var(--serif);font-size:24px;font-weight:600;margin-top:4px;}
+.statcard .delta{font-size:11px;color:var(--green);margin-top:2px;}
+.statcard .ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:15px;flex:none;background:var(--red-soft);color:var(--brand);}
+.chartrow{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:20px;}
+.chartcard{border:1px solid var(--line);border-radius:3px;padding:16px;background:var(--panel);}
+.chartcard h3{font-size:13px;margin:0 0 2px;font-weight:600;}
+.chartcard .cap{font-size:11px;color:var(--muted);margin:0 0 14px;}
+.legend{display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:11.5px;}
+.legend span.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;}
+.simplecard{border:1px solid var(--line);border-radius:3px;padding:20px 22px;background:var(--panel);max-width:420px;}
+.simplecard .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;}
+.simplecard b{display:block;font-family:var(--serif);font-size:17px;margin-top:4px;}
+@media (max-width:860px){ .statgrid{grid-template-columns:repeat(2,1fr);} .chartrow{grid-template-columns:1fr;} .appbar-right{width:100%;} .searchbox{flex:1;} }
+main{padding:24px 32px 60px;min-width:0;}
+.topline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.topline h1{font-family:var(--serif);font-size:22px;margin:0;font-weight:600;}
+.topline .meta{font-size:12.5px;color:var(--muted);}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:22px;}
+.stat{background:var(--panel);padding:12px 14px;}
+.stat b{display:block;font-family:var(--serif);font-size:24px;font-weight:600;}
+.stat span{font-size:11.5px;color:var(--muted);}
+.stat.warn b{color:var(--red);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:600;padding:0 10px 8px;border-bottom:1px solid var(--ink);}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
+tr.clickable{cursor:pointer;}
+tr.clickable:hover td{background:var(--panel);}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:2px;border:1px solid var(--line);}
+.tag.red{background:var(--red-soft);color:var(--red);border-color:var(--red);}
+.tag.gold{background:var(--gold-soft);color:var(--gold);border-color:var(--gold);}
+.tag.green{background:var(--green-soft);color:var(--green);border-color:var(--green);}
+.empty{padding:24px 10px;color:var(--muted);font-size:13px;}
+.btn{border:1px solid var(--ink);padding:8px 16px;font-size:13px;font-weight:600;border-radius:2px;}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
+.btn.ghost{border-color:var(--line);color:var(--muted);}
+.btn[disabled]{opacity:.4;cursor:not-allowed;}
+.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.docket{border:1px solid var(--line);background:var(--panel);}
+.docket-head{padding:20px 22px;border-bottom:1px solid var(--line);}
+.docket-head .num{font-size:11.5px;color:var(--muted);letter-spacing:.03em;margin-bottom:6px;}
+.docket-head h2{font-family:var(--serif);font-size:21px;margin:0 0 12px;font-weight:600;}
+.metagrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px 20px;font-size:13px;}
+.metagrid dt{font-size:11px;color:var(--muted);}
+.metagrid dd{margin:0;font-weight:500;}
+.cols{display:grid;grid-template-columns:1.3fr 1fr;}
+.col{padding:20px 22px;}
+.col+.col{border-left:1px solid var(--line);}
+.col h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:0 0 14px;font-weight:600;}
+.reg{list-style:none;margin:0;padding:0;}
+.reg li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding-bottom:14px;position:relative;font-size:13px;}
+.reg li::before{content:"";position:absolute;left:9px;top:20px;bottom:0;width:1px;background:var(--line);}
+.reg li:last-child::before{display:none;}
+.dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:10px;color:var(--muted);background:var(--panel);}
+.reg li.done .dot{background:var(--green);border-color:var(--green);color:#fff;}
+.reg li.now .dot{border-color:var(--brand);color:var(--brand);box-shadow:0 0 0 3px var(--gold-soft);}
+.reg li b{display:block;font-weight:600;}
+.reg li small{color:var(--muted);font-size:11.5px;}
+.field{border:1px solid var(--line);border-radius:2px;padding:8px 10px;margin-bottom:10px;}
+.field b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px;}
+.field input,.field textarea{width:100%;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;padding:0;}
+.field textarea{min-height:60px;resize:vertical;}
+.field.readonly{color:var(--muted);}
+.note{font-size:12px;color:var(--muted);margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;}
+.crumb{font-size:12px;color:var(--muted);margin-bottom:12px;}
+.crumb button{text-decoration:underline;}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--brand-dark);color:#fff;padding:10px 18px;font-size:13px;border-radius:2px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.shell.login-mode{grid-template-columns:1fr;}
+.shell.login-mode aside{display:none;}
+.shell.login-mode main{padding:0;}
+.loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--brand-dark);padding:24px;}
+.loginGrid{display:grid;grid-template-columns:1fr 1.1fr;max-width:920px;width:100%;background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.loginBrand{background:var(--brand-dark);color:#fff;padding:38px 32px;display:flex;flex-direction:column;justify-content:space-between;}
+.loginBrand .mark{margin-bottom:28px;}
+.loginBrand .mark .seal{border-color:#fff;color:#fff;}
+.loginBrand .mark div span{color:rgba(255,255,255,.65);}
+.loginBrand h2{font-family:var(--serif);font-size:22px;line-height:1.3;margin:0 0 12px;font-weight:600;}
+.loginBrand p{font-size:13px;line-height:1.6;color:rgba(255,255,255,.8);margin:0;}
+.loginBrand footer{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:rgba(255,255,255,.6);margin-top:28px;}
+.loginBrand footer .v{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:2px 10px;}
+.loginForm{padding:38px 34px;}
+.loginForm h1{font-family:var(--serif);font-size:22px;margin:0 0 4px;font-weight:600;}
+.loginForm .sub{font-size:13px;color:var(--muted);margin:0 0 22px;}
+.loginForm label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:5px;margin-top:16px;}
+.loginForm input,.loginForm select{width:100%;border:1px solid var(--line);border-radius:2px;padding:10px 12px;font:inherit;font-size:13.5px;background:var(--panel);color:var(--ink);}
+.loginForm .helper{font-size:11.5px;color:var(--muted);margin-top:6px;}
+.loginForm .btn{width:100%;margin-top:22px;padding:11px;font-size:14px;}
+@media (max-width:700px){ .loginGrid{grid-template-columns:1fr;} .loginBrand{padding:28px 24px;} .loginForm{padding:28px 24px;} }
+@media (max-width:860px){ .shell:not(.login-mode){grid-template-columns:1fr;} aside{position:static;height:auto;} .stats{grid-template-columns:repeat(2,1fr);} .cols{grid-template-columns:1fr;} .col+.col{border-left:0;border-top:1px solid var(--line);} main{padding:20px 16px 48px;} }
+@media (prefers-reduced-motion:reduce){ .toast{transition:none;} }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="mark"><span class="seal">TU</span><div><b>Sistem LAA</b><span>Komisi Etik Akademik</span></div></div>
+    <div class="rolebox" id="roleBox"></div>
+    <div class="navbox" id="navBox"></div>
+    <button class="signout" id="signout">Keluar</button>
+  </aside>
+  <main>
+    <div class="crumb" id="crumb"></div>
+    <div id="screen"></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+var TODAY = "21 Sep 2026";
+var STAGES = ["Evidence","LAA + BAP","Diterima Komisi Etik","BAP Pelapor & Saksi","BAP Terlapor (DK-2)","Sidang Etik","Rekomendasi → SK","Notifikasi"];
+var ROLES = [
+  { id:"pengawas", name:"Pengawas", sub:"Ir. Hana W." },
+  { id:"dosen", name:"Dosen MK", sub:"Dr. Budi S." },
+  { id:"komisi_etik", name:"Komisi Etik", sub:"Dr. Budi S." },
+  { id:"fakultas", name:"Fakultas", sub:"Kasubag Akademik" },
+  { id:"mahasiswa", name:"Mahasiswa", sub:"R. Maulana" },
+  { id:"notifikasi", name:"Dosen Wali / Akademik", sub:"Penerima notifikasi" }
+];
+
+var cases = [
+  { id:"K-2609-014", mk:"Manajemen Logistik", mhs:"A. Ramadhan", nim:"1301213045", stage:1, status:"draft", dosenNama:"Dr. Budi S.", note:"", jenis:"Kecurangan Ujian" },
+  { id:"K-2609-005", mk:"Statistika Industri", mhs:"R. Maulana", nim:"1301213099", stage:3, status:"diproses_komisi", dosenNama:"Dr. Budi S.", note:"", jenis:"Membawa Catatan" },
+  { id:"K-2609-031", mk:"Pemrograman Web", mhs:"K. Wardhani", nim:"1301213077", stage:6, status:"menunggu_pemeriksaan_fakultas", dosenNama:"Dr. Sari N.", note:"", jenis:"Joki Ujian" },
+  { id:"K-2608-022", mk:"Ekonomi Teknik", mhs:"S. Amelia", nim:"1301212088", stage:8, status:"selesai", dosenNama:"Dr. Sari N.", note:"", jenis:"Kecurangan Ujian" }
+];
+
+/* Menu sidebar per role — beda kedalaman: role administratif dapat
+   statistik & riwayat, Mahasiswa/Notifikasi cuma status ringkas. */
+var NAV = {
+  pengawas: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"laporanSaya",label:"Laporan Saya",ic:"▤"}, {id:"formLapor",label:"Buat Laporan",ic:"＋"}, {id:"riwayat",label:"Riwayat Laporan",ic:"↻"} ],
+  dosen: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"verifikasi",label:"Verifikasi Laporan",ic:"✓"}, {id:"riwayat",label:"Riwayat Verifikasi",ic:"↻"}, {id:"notifikasiList",label:"Notifikasi",ic:"●"} ],
+  komisi_etik: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"pemeriksaan",label:"Pemeriksaan Berkas",ic:"⚖"}, {id:"riwayat",label:"Riwayat Kasus",ic:"↻"}, {id:"notifikasiList",label:"Notifikasi",ic:"●"} ],
+  fakultas: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"rekomendasi",label:"Rekomendasi Masuk",ic:"✓"}, {id:"riwayat",label:"Riwayat SK",ic:"↻"}, {id:"notifikasiList",label:"Notifikasi",ic:"●"} ],
+  mahasiswa: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"statusSaya",label:"Status Kasus Saya",ic:"≡"}, {id:"notifikasiList",label:"Notifikasi",ic:"●"} ],
+  notifikasi: [ {id:"dashboard",label:"Dashboard",ic:"◆"}, {id:"notifikasiList",label:"Notifikasi",ic:"●"} ]
+};
+var NAV_TITLE = { dashboard:"Dashboard Utama", laporanSaya:"Laporan Saya", formLapor:"Buat Laporan", riwayat:"Riwayat", verifikasi:"Verifikasi Laporan",
+  pemeriksaan:"Pemeriksaan Berkas", rekomendasi:"Rekomendasi Masuk", statusSaya:"Status Kasus Saya", notifikasiList:"Notifikasi" };
+
+/* Data statistik ilustratif untuk overview (bukan dihitung dari 4 kasus
+   demo saja — ini angka contoh skala aktual untuk keperluan tampilan). */
+var MONTHLY = { labels:["Apr","Mei","Jun","Jul","Agu","Sep"], values:[4,7,5,6,9,11] };
+var DIST = [
+  { label:"Kecurangan Ujian", value:45, color:"var(--brand)" },
+  { label:"Membawa Catatan", value:25, color:"#8E0B20" },
+  { label:"Joki Ujian", value:18, color:"#B8862E" },
+  { label:"Lainnya", value:12, color:"#6B6B6B" }
+];
+
+var state = { loggedIn:false, role:"komisi_etik", screen:"dashboard", caseId:null, stack:[] };
+var shellEl = document.querySelector(".shell");
+function $(id){ return document.getElementById(id); }
+function findCase(id){ return cases.filter(function(c){return c.id===id;})[0]; }
+function go(screen,id){ state.stack.push({screen:state.screen,caseId:state.caseId}); state.screen=screen; state.caseId=id||null; render(); }
+function back(){ var p=state.stack.pop(); if(p){state.screen=p.screen; state.caseId=p.caseId;} else {state.screen="dashboard"; state.caseId=null;} render(); }
+function setRole(r){ state.role=r; state.screen="dashboard"; state.caseId=null; state.stack=[]; render(); }
+var toastTimer;
+function toast(m){ var t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove("show");},2600); }
+
+function barSvg(labels,values){
+  var w=340,h=150,pad=22,max=Math.max.apply(null,values)*1.15,bw=(w-pad*2)/values.length-8;
+  var bars=values.map(function(v,i){
+    var bh=(v/max)*(h-30), x=pad+i*((w-pad*2)/values.length)+4, y=h-24-bh;
+    return '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="var(--brand)" rx="1"></rect>'+
+    '<text x="'+(x+bw/2)+'" y="'+(h-8)+'" font-size="9" fill="var(--muted)" text-anchor="middle" font-family="var(--sans)">'+labels[i]+'</text>'+
+    '<text x="'+(x+bw/2)+'" y="'+(y-4)+'" font-size="9" fill="var(--ink)" text-anchor="middle" font-family="var(--sans)">'+v+'</text>';
+  }).join("");
+  return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto">'+bars+'</svg>';
+}
+function donutSvg(segments){
+  var r=52,cx=64,cy=64,circ=2*Math.PI*r,total=segments.reduce(function(a,s){return a+s.value;},0),offset=0;
+  var arcs=segments.map(function(s){
+    var frac=s.value/total, len=frac*circ, dash=len+" "+(circ-len);
+    var el='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="20" stroke-dasharray="'+dash+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+    offset+=len; return el;
+  }).join("");
+  return '<svg viewBox="0 0 128 128" style="width:120px;height:120px">'+arcs+'</svg>';
+}
+function legendHtml(segments){
+  var total=segments.reduce(function(a,s){return a+s.value;},0);
+  return '<div class="legend">'+segments.map(function(s){
+    return '<div><span class="sw" style="background:'+s.color+'"></span>'+s.label+' — '+Math.round(s.value/total*100)+'%</div>';
+  }).join("")+'</div>';
+}
+function icon(name){
+  var m={file:"▤",clock:"◔",warn:"▲",check:"✓"};
+  return '<span class="ic">'+(m[name]||"◆")+'</span>';
+}
+
+function renderNavBox(){
+  var items = NAV[state.role]||[];
+  $("navBox").innerHTML='<div class="h">Menu</div>'+items.map(function(i){
+    return '<button data-nav="'+i.id+'" aria-current="'+(state.screen===i.id)+'"><span class="ic">'+i.ic+'</span>'+i.label+'</button>';
+  }).join("");
+}
+function renderAppbar(title){
+  var roleObj=(ROLES.filter(function(r){return r.id===state.role;})[0]||{});
+  var roleName=roleObj.name||"";
+  var initials=roleName.split(" ").map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
+  return '<div class="appbar"><div class="crumbtxt">Dashboard / '+roleName+' / '+title+'</div>'+
+  '<div class="appbar-row"><h1>'+title+'</h1><div class="appbar-right">'+
+  '<span class="searchbox">🔍 Cari kasus, NIM…</span>'+
+  '<span class="bell">🔔</span>'+
+  '<div class="profilechip"><span class="av">'+initials+'</span><span class="nm"><b>'+roleName+'</b></span></div>'+
+  '</div></div></div>';
+}
+function statusLabel(c){
+  if(c.stage>=8) return "Selesai";
+  var map={draft:"Draf — belum dikirim",menunggu_pemeriksaan_komisi:"Menunggu pemeriksaan Komisi Etik",dikembalikan_ke_dosen:"Dikembalikan — perlu perbaikan",diproses_komisi:"Diproses Komisi Etik",menunggu_pemeriksaan_fakultas:"Menunggu diproses Fakultas"};
+  return map[c.status] || ("Tahap "+c.stage+" — "+STAGES[c.stage-1]);
+}
+function tag(c){
+  if(c.stage>=8) return '<span class="tag green">Selesai</span>';
+  if(c.status==="dikembalikan_ke_dosen") return '<span class="tag red">Dikembalikan</span>';
+  if(c.stage>=6) return '<span class="tag gold">Mendekati SLA</span>';
+  return '<span class="tag">Berjalan</span>';
+}
+
+function renderRoleBox(){
+  $("roleBox").innerHTML='<div class="h">Masuk sebagai</div>'+ROLES.map(function(r){
+    return '<button data-role="'+r.id+'" aria-pressed="'+(state.role===r.id)+'">'+r.name+'</button>';
+  }).join("");
+}
+function renderCrumb(){
+  if(state.stack.length===0){ $("crumb").innerHTML="&nbsp;"; return; }
+  $("crumb").innerHTML='<button id="backBtn">← Kembali</button>';
+  $("backBtn").addEventListener("click", back);
+}
+
+/* ---- DASHBOARDS ---- */
+function dashPengawas(){
+  var rows = cases.filter(function(c){return c.dosenNama==="Dr. Budi S." || c.id==="K-2609-014";});
+  return '<table><tr><th>Kode</th><th>Mata Kuliah</th><th>Status</th></tr>'+
+  rows.map(function(c){return '<tr><td>'+c.id+'</td><td>'+c.mk+'</td><td>'+statusLabel(c)+' '+tag(c)+'</td></tr>';}).join("")+'</table>'+
+  '<div class="actions"><button class="btn primary" id="btnLapor">+ Buat Laporan Baru</button></div>';
+}
+function formLapor(){
+  return '<div class="docket"><div class="col" style="border:0">'+
+  '<div class="field"><b>Mata kuliah</b><input id="inpMK" placeholder="mis. Manajemen Logistik"></div>'+
+  '<div class="field"><b>Kelas / Ruang</b><input id="inpKelas" placeholder="mis. LG-46-02 / B-204"></div>'+
+  '<div class="field"><b>Jenis pelanggaran</b><input id="inpJenis" placeholder="mis. membawa catatan tidak sah"></div>'+
+  '<div class="field"><b>Evidence</b><input type="file" disabled></div>'+
+  '<div class="actions"><button class="btn ghost" id="cancel1">Batal</button><button class="btn primary" id="submitLapor">Kirim ke Dosen</button></div>'+
+  '</div></div>';
+}
+function dashDosen(){
+  var inbox = cases.filter(function(c){return c.stage===1||c.stage===2;});
+  return '<table><tr><th>Kode</th><th>Mahasiswa</th><th>Status</th></tr>'+
+  (inbox.length? inbox.map(function(c){return '<tr class="clickable" data-goto="formLAA" data-id="'+c.id+'"><td>'+c.id+'</td><td>'+c.mhs+'</td><td>'+statusLabel(c)+' '+tag(c)+'</td></tr>';}).join(""):'<tr><td colspan="3"><div class="empty">Tidak ada laporan yang perlu ditindaklanjuti.</div></td></tr>')+
+  '</table>';
+}
+function formLAA(c){
+  var returned = c.status==="dikembalikan_ke_dosen";
+  return '<div class="topline"><h1>Form LAA + BAP</h1><span class="meta">'+c.id+'</span></div>'+
+  '<div class="docket"><div class="col" style="border:0">'+
+  (returned? '<div class="field readonly"><b>Catatan pengembalian Komisi Etik</b>'+(c.note||"BAP belum menyebut waktu kejadian secara spesifik.")+'</div>':"")+
+  '<div class="field"><b>Nama mahasiswa</b><input id="inpNama" value="'+(c.mhs==="—"?"":c.mhs)+'" placeholder="nama mahasiswa terlapor"></div>'+
+  '<div class="field"><b>NIM</b><input id="inpNIM" value="'+(c.nim==="—"?"":c.nim)+'" placeholder="NIM mahasiswa"></div>'+
+  '<div class="field"><b>Isi LAA</b><textarea id="inpLAA" placeholder="kronologi kejadian...">'+(c.laaText||"")+'</textarea></div>'+
+  '<div class="field"><b>Isi BAP</b><textarea id="inpBAP" placeholder="berita acara...">'+(c.bapText||"")+'</textarea></div>'+
+  '<div class="actions"><button class="btn ghost" id="cancel1">Batal</button><button class="btn primary" id="submitLAA" data-id="'+c.id+'">Kirim ke Komisi Etik</button></div>'+
+  '</div></div>';
+}
+function dashKomisi(){
+  var active = cases.filter(function(c){return c.stage<8;});
+  var mendekati = active.filter(function(c){return c.stage>=6;});
+  var need = cases.filter(function(c){return c.status==="menunggu_pemeriksaan_komisi"||(c.stage>=3&&c.stage<6);});
+  return '<table><tr><th>Kode</th><th>Mahasiswa</th><th>Status</th></tr>'+
+  (need.length? need.map(function(c){
+    var conflict = c.dosenNama==="Dr. Budi S.";
+    return '<tr class="'+(conflict?"":"clickable")+'" '+(conflict?"":'data-goto="detailKomisi" data-id="'+c.id+'"')+' style="'+(conflict?"opacity:.5":"")+'"><td>'+c.id+'</td><td>'+c.mhs+'</td><td>'+statusLabel(c)+(conflict?' <span class="tag">dialihkan — konflik kepentingan</span>':' '+tag(c))+'</td></tr>';
+  }).join(""):'<tr><td colspan="3"><div class="empty">Tidak ada kasus yang perlu tindakan.</div></td></tr>')+
+  '</table>'+
+  '<p class="note">K-2609-014 tidak muncul di antrean tindakan karena dosennya sama dengan akun yang sedang login sebagai Komisi Etik — dialihkan otomatis (aturan konflik kepentingan, UC-K0).</p>';
+}
+function detailKomisi(c){
+  var conflict = c.dosenNama==="Dr. Budi S.";
+  var steps = STAGES.map(function(s,i){var n=i+1,cls=n<c.stage?"done":n===c.stage?"now":"";
+    return '<li class="'+cls+'"><span class="dot">'+(cls==="done"?"✓":n)+'</span><div><b>'+s+'</b>'+(cls==="now"?'<small>Sedang berjalan</small>':cls==="done"?'<small>Selesai</small>':'<small>Belum dimulai</small>')+'</div></li>';
+  }).join("");
+  var action;
+  if(conflict){ action='<div class="field readonly"><b>Konflik kepentingan</b>Anda adalah dosen mata kuliah pada kasus ini — pemeriksaan berkas dialihkan ke anggota Komisi Etik lain.</div>'; }
+  else if(c.status==="menunggu_pemeriksaan_komisi"){ action='<div class="actions"><button class="btn primary" id="gotoPeriksa" data-id="'+c.id+'">Buka Form Periksa Berkas</button></div>'; }
+  else if(c.stage>=3 && c.stage<6){ var lbl=c.stage===3?"BAP Pelapor & Saksi":c.stage===4?"BAP Terlapor":"Jadwal & Rekomendasi Sidang";
+    action='<div class="actions"><button class="btn primary" id="advanceBap" data-id="'+c.id+'">Lengkapi '+lbl+'</button></div>'; }
+  else { action='<div class="field readonly">Tidak ada tindakan tersedia di tahap ini.</div>'; }
+  return '<div class="topline"><h1>Berkas Kasus</h1></div><div class="docket"><div class="docket-head"><div class="num">Nomor perkara '+c.id+'</div>'+
+  '<h2>'+c.mhs+' — '+c.mk+'</h2><dl class="metagrid"><div><dt>NIM</dt><dd>'+c.nim+'</dd></div><div><dt>Status</dt><dd>'+statusLabel(c)+'</dd></div></dl></div>'+
+  '<div class="cols"><div class="col"><h3>Registrasi tahapan</h3><ul class="reg">'+steps+'</ul></div>'+
+  '<div class="col"><h3>Tindakan</h3>'+action+'</div></div></div>';
+}
+function formPeriksa(c){
+  return '<div class="topline"><h1>Periksa Berkas</h1><span class="meta">'+c.id+'</span></div>'+
+  '<div class="docket"><div class="col" style="border:0">'+
+  '<div class="field readonly"><b>Nama / NIM</b>'+c.mhs+' — '+c.nim+'</div>'+
+  '<div class="field readonly"><b>LAA (isian Dosen)</b>'+(c.laaText||"(kosong)")+'</div>'+
+  '<div class="field readonly"><b>BAP (isian Dosen)</b>'+(c.bapText||"(kosong)")+'</div>'+
+  '<div class="field"><b>Catatan (wajib jika Kembalikan)</b><textarea id="noteKembali" placeholder="alasan pengembalian..."></textarea></div>'+
+  '<div class="actions"><button class="btn ghost" id="cancel1">Batal</button><button class="btn ghost" id="kembalikan" data-id="'+c.id+'">Kembalikan ke Dosen</button><button class="btn primary" id="terima" data-id="'+c.id+'">Terima Berkas</button></div>'+
+  '</div></div>';
+}
+function dashFakultas(){
+  var rows = cases.filter(function(c){return c.status==="menunggu_pemeriksaan_fakultas";});
+  return '<table><tr><th>Kode</th><th>Mahasiswa</th><th>Status</th></tr>'+
+  (rows.length? rows.map(function(c){return '<tr class="clickable" data-goto="detailFakultas" data-id="'+c.id+'"><td>'+c.id+'</td><td>'+c.mhs+'</td><td>'+statusLabel(c)+' '+tag(c)+'</td></tr>';}).join(""):'<tr><td colspan="3"><div class="empty">Tidak ada rekomendasi yang menunggu.</div></td></tr>')+
+  '</table>';
+}
+function detailFakultas(c){
+  return '<div class="topline"><h1>Rekomendasi</h1></div><div class="docket"><div class="docket-head"><div class="num">Nomor perkara '+c.id+'</div><h2>'+c.mhs+'</h2></div>'+
+  '<div class="col"><div class="field readonly"><b>Rekomendasi Komisi Etik</b>Skorsing 1 semester, berdasarkan hasil sidang etik.</div>'+
+  '<div class="actions"><button class="btn ghost" id="cancel1">Batal</button><button class="btn primary" id="gotoSK" data-id="'+c.id+'">Buka Form Terbitkan SK</button></div></div></div>';
+}
+function formSK(c){
+  return '<div class="topline"><h1>Terbitkan SK</h1><span class="meta">'+c.id+'</span></div>'+
+  '<div class="docket"><div class="col" style="border:0">'+
+  '<div class="field"><b>Nomor SK</b><input placeholder="mis. 045/SK/FRI/2026"></div>'+
+  '<div class="field"><b>File SK</b><input type="file" disabled></div>'+
+  '<div class="actions"><button class="btn ghost" id="cancel1">Batal</button><button class="btn primary" id="terbitkanSK" data-id="'+c.id+'">Terbitkan SK</button></div>'+
+  '</div></div>';
+}
+function dashMahasiswa(){
+  var mine = cases.filter(function(c){return c.mhs==="R. Maulana";});
+  return '<table><tr><th>Kode</th><th>Mata Kuliah</th><th>Status</th></tr>'+
+  mine.map(function(c){return '<tr class="clickable" data-goto="detailMahasiswa" data-id="'+c.id+'"><td>'+c.id+'</td><td>'+c.mk+'</td><td>'+statusLabel(c)+' '+tag(c)+'</td></tr>';}).join("")+
+  '</table><p class="note">Hanya menampilkan status umum — isi BAP, catatan Komisi Etik, dan rekomendasi tidak ditampilkan.</p>';
+}
+function detailMahasiswa(c){
+  return '<div class="topline"><h1>Detail Kasus Saya</h1></div><div class="docket"><div class="docket-head"><div class="num">Nomor perkara '+c.id+'</div><h2>'+c.mk+'</h2></div>'+
+  '<div class="col"><div class="field readonly"><b>Tahap saat ini</b>'+c.stage+' dari 8 — '+STAGES[c.stage-1]+'</div>'+
+  '<div class="field readonly"><b>SK</b>'+(c.stage>=8?"Sudah terbit":"Belum terbit")+'</div></div></div>';
+}
+
+/* ---- OVERVIEW / RIWAYAT / NOTIFIKASI (per role, sengaja dibedakan
+   kedalamannya: Komisi Etik & Fakultas lihat lintas kasus + grafik
+   distribusi; Dosen/Pengawas hanya cakupan miliknya sendiri tanpa
+   grafik distribusi institusional; Mahasiswa/Notifikasi paling ringkas
+   — konsisten dengan kebijakan akses RLS yang sudah kita rancang. ---- */
+function renderOverview(){
+  var roleObj = ROLES.filter(function(r){return r.id===state.role;})[0];
+  if(state.role==="mahasiswa"){
+    var c = cases.filter(function(x){return x.mhs==="R. Maulana";})[0];
+    return '<div class="simplecard"><span class="lbl">Status kasus Anda</span><b>'+(c?statusLabel(c):"Tidak ada kasus aktif")+'</b>'+
+    (c? '<p style="margin-top:14px;font-size:12.5px;color:var(--muted);">Tahap '+c.stage+' dari 8 — '+STAGES[c.stage-1]+'. Hanya status umum yang ditampilkan; isi BAP, catatan Komisi Etik, dan rekomendasi tidak dibuka untuk mahasiswa.</p>':'')+'</div>';
+  }
+  if(state.role==="notifikasi"){
+    var done=cases.filter(function(c){return c.stage>=8;});
+    return '<div class="simplecard"><span class="lbl">Notifikasi terbaru</span><b>'+done.length+' SK diterbitkan</b>'+
+    '<p style="margin-top:14px;font-size:12.5px;color:var(--muted);">Peran ini murni penerima notifikasi, tidak melakukan tindakan apa pun terhadap kasus.</p></div>';
+  }
+  var scope;
+  if(state.role==="pengawas") scope=cases.filter(function(c){return c.dosenNama==="Dr. Budi S."||c.id==="K-2609-014";});
+  else if(state.role==="dosen") scope=cases.filter(function(c){return c.dosenNama==="Dr. Budi S.";});
+  else scope=cases;
+  var total=scope.length, proses=scope.filter(function(c){return c.stage<8;}).length,
+      approval=scope.filter(function(c){return c.status==="menunggu_pemeriksaan_komisi"||c.status==="menunggu_pemeriksaan_fakultas";}).length,
+      selesai=scope.filter(function(c){return c.stage>=8;}).length;
+  var banner='<div class="banner"><span class="badge">Portal Resmi Telkom University</span>'+
+  '<h2>Selamat datang, '+roleObj.name+'</h2>'+
+  '<p>Sistem Informasi Pelaporan Pelanggaran Kode Etik Mahasiswa. Target penyelesaian kasus: 30 hari, dengan jendela Sidang Etik 7–14 hari di dalamnya.</p></div>';
+  var stats='<div class="statgrid">'+
+  '<div class="statcard"><div><span class="lbl">Total Kasus</span><b>'+total+'</b></div>'+icon("file")+'</div>'+
+  '<div class="statcard"><div><span class="lbl">Dalam Proses</span><b>'+proses+'</b></div>'+icon("clock")+'</div>'+
+  '<div class="statcard"><div><span class="lbl">Menunggu Tindakan</span><b>'+approval+'</b></div>'+icon("warn")+'</div>'+
+  '<div class="statcard"><div><span class="lbl">Selesai (SK)</span><b>'+selesai+'</b></div>'+icon("check")+'</div></div>';
+  var showDonut = (state.role==="komisi_etik"||state.role==="fakultas");
+  var charts='<div class="chartrow"><div class="chartcard"><h3>Kasus per Bulan</h3><p class="cap">Data ilustrasi — tren volume laporan</p>'+barSvg(MONTHLY.labels,MONTHLY.values)+'</div>'+
+  (showDonut? '<div class="chartcard"><h3>Distribusi Jenis Pelanggaran</h3><p class="cap">Data ilustrasi, seluruh kasus</p><div style="display:flex;gap:16px;align-items:center;">'+donutSvg(DIST)+legendHtml(DIST)+'</div></div>'
+    : '<div class="chartcard"><h3>Cakupan Akses</h3><p class="cap">Sesuai kebijakan akses data</p><p style="font-size:12.5px;color:var(--muted);">Role ini hanya melihat kasus miliknya sendiri, jadi rincian distribusi jenis pelanggaran institusional tidak ditampilkan — itu hanya tersedia untuk Komisi Etik dan Fakultas yang punya akses lintas kasus.</p></div>')+
+  '</div>';
+  return banner+stats+charts;
+}
+function renderRiwayat(){
+  var scope;
+  if(state.role==="pengawas") scope=cases.filter(function(c){return (c.dosenNama==="Dr. Budi S."||c.id==="K-2609-014")&&c.stage>=8;});
+  else if(state.role==="dosen") scope=cases.filter(function(c){return c.dosenNama==="Dr. Budi S."&&c.stage>=8;});
+  else scope=cases.filter(function(c){return c.stage>=8;});
+  return '<table><tr><th>Kode</th><th>Mahasiswa</th><th>Hasil</th></tr>'+
+  (scope.length? scope.map(function(c){return '<tr><td>'+c.id+'</td><td>'+c.mhs+'</td><td>SK terbit</td></tr>';}).join(""):'<tr><td colspan="3"><div class="empty">Belum ada riwayat.</div></td></tr>')+'</table>';
+}
+function renderNotifList(){
+  var items=[];
+  if(state.role==="dosen"){ items=cases.filter(function(c){return c.dosenNama==="Dr. Budi S."&&c.status==="dikembalikan_ke_dosen";}).map(function(c){return {t:"Berkas dikembalikan",d:c.id+" — "+(c.note||"perlu perbaikan")};});
+    cases.filter(function(c){return c.dosenNama==="Dr. Budi S."&&c.stage>=8;}).forEach(function(c){items.push({t:"SK terbit",d:c.id});}); }
+  else if(state.role==="komisi_etik"){ items=cases.filter(function(c){return c.status==="menunggu_pemeriksaan_komisi";}).map(function(c){return {t:"Berkas baru menunggu diperiksa",d:c.id};}); }
+  else if(state.role==="fakultas"){ items=cases.filter(function(c){return c.status==="menunggu_pemeriksaan_fakultas";}).map(function(c){return {t:"Rekomendasi baru masuk",d:c.id};}); }
+  else if(state.role==="mahasiswa"){ items=cases.filter(function(c){return c.mhs==="R. Maulana"&&c.stage>=8;}).map(function(c){return {t:"SK terbit",d:c.id};}); }
+  else { items=cases.filter(function(c){return c.stage>=8;}).map(function(c){return {t:"SK terbit",d:c.id+" — "+c.mhs};}); }
+  if(!items.length) return '<div class="empty">Tidak ada notifikasi baru.</div>';
+  return '<table><tr><th>Perihal</th><th>Detail</th></tr>'+items.map(function(n){return '<tr><td>'+n.t+'</td><td>'+n.d+'</td></tr>';}).join("")+'</table>';
+}
+
+function renderLogin(){
+  var opts = ROLES.map(function(r){ return '<option value="'+r.id+'">'+r.name+'</option>'; }).join("");
+  return '<div class="loginScreen"><div class="loginGrid">'+
+  '<div class="loginBrand"><div><div class="mark"><span class="seal">TU</span><div><b>Sistem LAA</b><span>Komisi Etik Akademik</span></div></div>'+
+  '<h2>Integritas Akademik &amp; Kedisiplinan Mahasiswa</h2>'+
+  '<p>Melacak setiap kasus pelanggaran kode etik dari evidence hingga SK, dengan gerbang pemeriksaan di setiap serah-terima antar pihak dan pemantauan SLA 30 hari untuk seluruh proses.</p></div>'+
+  '<footer><span>© 2026 Telkom University</span><span class="v">Prototype</span></footer></div>'+
+  '<div class="loginForm"><h1>Masuk ke Sistem LAA</h1><p class="sub">Gunakan akun SSO Telkom University.</p>'+
+  '<label>Email / NIP / NIM</label><input id="loginEmail" placeholder="nama@telkomuniversity.ac.id">'+
+  '<label>Password</label><input id="loginPassword" type="password" placeholder="••••••••">'+
+  '<label>Pilih Role Akses (Demo)</label><select id="loginRole">'+opts+'</select>'+
+  '<p class="helper">Di sistem sesungguhnya, role dibaca otomatis dari akun (bisa lebih dari satu, lihat Role Switcher setelah masuk) — dropdown ini cuma penyederhanaan untuk demo.</p>'+
+  '<button class="btn primary" id="doLogin">Masuk</button></div>'+
+  '</div></div>';
+}
+function bindLogin(){
+  var b=$("doLogin"); if(b) b.addEventListener("click", function(){
+    state.role = $("loginRole").value; state.loggedIn = true; state.screen="dashboard"; state.stack=[];
+    render();
+  });
+}
+
+/* ---- ROUTER ---- */
+var TOPLEVEL = ["dashboard","laporanSaya","formLapor","riwayat","verifikasi","pemeriksaan","rekomendasi","notifikasiList","statusSaya"];
+function render(){
+  if(!state.loggedIn){
+    shellEl.classList.add("login-mode");
+    $("screen").innerHTML = renderLogin();
+    $("crumb").innerHTML = "";
+    bindLogin();
+    return;
+  }
+  shellEl.classList.remove("login-mode");
+  renderRoleBox(); renderNavBox();
+  var html=""; var c=state.caseId?findCase(state.caseId):null;
+  if(TOPLEVEL.indexOf(state.screen)!==-1){
+    $("crumb").innerHTML="&nbsp;";
+    var body;
+    switch(state.screen){
+      case "dashboard": body=renderOverview(); break;
+      case "laporanSaya": body=dashPengawas(); break;
+      case "formLapor": body=formLapor(); break;
+      case "riwayat": body=renderRiwayat(); break;
+      case "verifikasi": body=dashDosen(); break;
+      case "pemeriksaan": body=dashKomisi(); break;
+      case "rekomendasi": body=dashFakultas(); break;
+      case "notifikasiList": body=renderNotifList(); break;
+      case "statusSaya": body=dashMahasiswa(); break;
+    }
+    html = renderAppbar(NAV_TITLE[state.screen]) + body;
+  } else {
+    renderCrumb();
+    switch(state.screen){
+      case "formLAA": html=formLAA(c); break;
+      case "detailKomisi": html=detailKomisi(c); break;
+      case "formPeriksa": html=formPeriksa(c); break;
+      case "detailFakultas": html=detailFakultas(c); break;
+      case "formSK": html=formSK(c); break;
+      case "detailMahasiswa": html=detailMahasiswa(c); break;
+    }
+  }
+  $("screen").innerHTML=html; bind();
+}
+function bind(){
+  document.querySelectorAll("tr[data-goto]").forEach(function(row){ row.addEventListener("click",function(){go(row.getAttribute("data-goto"),row.getAttribute("data-id"));}); });
+  var cancel=$("cancel1"); if(cancel) cancel.addEventListener("click",back);
+  var btnLapor=$("btnLapor"); if(btnLapor) btnLapor.addEventListener("click",function(){go("formLapor");});
+  var submitLapor=$("submitLapor"); if(submitLapor) submitLapor.addEventListener("click",function(){
+    var mk=$("inpMK").value.trim(), kelas=$("inpKelas").value.trim(), jenis=$("inpJenis").value.trim();
+    if(!mk||!jenis){ toast("Isi minimal Mata Kuliah dan Jenis Pelanggaran."); return; }
+    var id="K-2609-0"+(20+cases.length);
+    cases.push({id:id,mk:mk,kelas:kelas,mhs:"—",nim:"—",stage:2,status:"draft",dosenNama:"Dr. Budi S.",note:"",jenis:jenis||"Lainnya",laaText:"",bapText:""});
+    toast("Laporan "+id+" terkirim ke Dosen."); state.stack=[]; state.screen="laporanSaya"; render();
+  });
+  var submitLAA=$("submitLAA"); if(submitLAA) submitLAA.addEventListener("click",function(){
+    var c=findCase(submitLAA.getAttribute("data-id"));
+    var nama=$("inpNama").value.trim(), nim=$("inpNIM").value.trim(), laa=$("inpLAA").value.trim(), bap=$("inpBAP").value.trim();
+    if(!nama||!laa||!bap){ toast("Isi minimal Nama, LAA, dan BAP sebelum dikirim."); return; }
+    c.mhs=nama; c.nim=nim||"—"; c.laaText=laa; c.bapText=bap;
+    c.status="menunggu_pemeriksaan_komisi"; c.stage=2;
+    toast("LAA + BAP "+c.id+" terkirim ke Komisi Etik. SLA mulai berjalan."); state.stack=[]; state.screen="verifikasi"; render();
+  });
+  var gotoPeriksa=$("gotoPeriksa"); if(gotoPeriksa) gotoPeriksa.addEventListener("click",function(){go("formPeriksa",gotoPeriksa.getAttribute("data-id"));});
+  var advanceBap=$("advanceBap"); if(advanceBap) advanceBap.addEventListener("click",function(){
+    var c=findCase(advanceBap.getAttribute("data-id")); var label=STAGES[c.stage-1]; c.stage=Math.min(6,c.stage+1);
+    if(c.stage===6) c.status="menunggu_pemeriksaan_fakultas";
+    toast(label+" tersimpan. "+(c.stage>=6?"Rekomendasi terkirim ke Fakultas.":"Lanjut ke "+STAGES[c.stage-1]+".")); render();
+  });
+  var terima=$("terima"); if(terima) terima.addEventListener("click",function(){
+    var c=findCase(terima.getAttribute("data-id")); c.status="diproses_komisi"; c.stage=3;
+    toast("Berkas "+c.id+" diterima. Lanjut ke BAP pelapor & saksi."); state.stack=state.stack.slice(0,1); state.screen="detailKomisi"; render();
+  });
+  var kembalikan=$("kembalikan"); if(kembalikan) kembalikan.addEventListener("click",function(){
+    var c=findCase(kembalikan.getAttribute("data-id")); var n=$("noteKembali");
+    c.status="dikembalikan_ke_dosen"; c.stage=2; c.note=(n&&n.value)||"Kelengkapan dokumen belum memadai.";
+    toast("Berkas "+c.id+" dikembalikan ke Dosen dengan catatan."); state.stack=[]; state.screen="pemeriksaan"; render();
+  });
+  var gotoSK=$("gotoSK"); if(gotoSK) gotoSK.addEventListener("click",function(){go("formSK",gotoSK.getAttribute("data-id"));});
+  var terbitkanSK=$("terbitkanSK"); if(terbitkanSK) terbitkanSK.addEventListener("click",function(){
+    var c=findCase(terbitkanSK.getAttribute("data-id")); c.stage=8; c.status="selesai";
+    toast("SK "+c.id+" terbit. Notifikasi terkirim ke dosen wali, mahasiswa, akademik."); state.stack=[]; state.screen="rekomendasi"; render();
+  });
+}
+$("roleBox").addEventListener("click",function(ev){ var b=ev.target.closest("button[data-role]"); if(b) setRole(b.getAttribute("data-role")); });
+$("navBox").addEventListener("click",function(ev){ var b=ev.target.closest("button[data-nav]"); if(!b) return; state.screen=b.getAttribute("data-nav"); state.caseId=null; state.stack=[]; render(); });
+$("signout").addEventListener("click",function(){ state.loggedIn=false; state.stack=[]; state.caseId=null; render(); });
+render();
+})();
+</script>
+</body>
+</html>
